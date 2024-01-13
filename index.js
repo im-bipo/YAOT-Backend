@@ -1,16 +1,18 @@
 const express = require("express");
+const dotenv = require('dotenv') 
 
-const connectToMongoDB = require("./connection");
+const connectToMongoDB = require("./connection"); 
 
 //import routers
 const eventRouter = require("./routes/event");
 
 const app = express();
+dotenv.config()
 
-const PORT = 3000;
+const {PORT,DB_URL} = process.env;
 
 //databaseConnection
-connectToMongoDB("mongodb://localhost:27017/CSIT_Assocation_OF_BMC_Database");
+connectToMongoDB(DB_URL); 
 
 //middlewares
 app.use(express.urlencoded({extended : true}))
