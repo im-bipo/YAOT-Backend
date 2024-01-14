@@ -32,7 +32,7 @@ const createNewEvent = async (req, res) => {
   }
 };
 
-//get event with event name
+//get event details
 const getEventByEventName = async (req, res) => {
   const { eventName } = req.params;
   const result = await Event.find({ name: eventName });
@@ -48,4 +48,63 @@ const getEventByEventName = async (req, res) => {
   });
 };
 
-module.exports = { handleGetAllEvent, createNewEvent, getEventByEventName };
+//update event informatio
+const updateEventByEventName = async (req, res) => {
+  const data = req.body;
+  if (!data.name || !data.name || !data.time || !data.mentor)
+    return res.status(400).json({
+      msg: "Insufficent data",
+      "field required": "name, date, time and mentro",
+      sucess: false,
+    });
+  try {
+    const { name, date, time, mentor } = req.body;
+    const result = await Event.findOneAndUpdate(
+      { name: req.params.eventName },
+      {
+        name: name,
+        date: date,
+        time: time,
+        mentor: mentor,
+      },
+      { new: true }
+    );
+    if (!result) {
+      return res.json({ msg: "Event not fouund", sucess: false });
+    }
+    return res.json({ msg: "Event updated", sucess: true, res: result });
+  } catch (err) {
+    //block user form entering multiple event with same event name
+    if (err.code === 11000) {
+      return res.status(400).json({
+        msg: "duplicate value in unique field",
+        sucess: false,
+        error: err,
+      });
+    }
+    return res.status(500).json({ msg: "server error", err: err });
+  }
+};
+
+//delete event
+const deleteEventByEventName = async (req, res) => {
+  try {
+    const result = await Event.findOneAndDelete({ name: req.params.eventName });
+    if (!result) {
+      return res.json({ msg: "Event Not found", sucess: false });
+    }
+    return res.json({ msg: "Event Deleted", sucess: true, res: result });
+  } catch (err) {
+    return res.status(500).json({ msg: "server error", err: err });
+  }
+};
+
+
+
+module.exports = {
+  handleGetAllEvent,
+  createNewEvent,
+  getEventByEventName,
+  updateEventByEventName,
+  deleteEventByEventName,
+};
