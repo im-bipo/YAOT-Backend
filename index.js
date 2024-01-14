@@ -12,7 +12,7 @@ dotenv.config()
 const {PORT,DB_URL} = process.env;
 
 //databaseConnection
-connectToMongoDB(DB_URL); 
+connectToMongoDB(DB_URL);  
 
 //middlewares
 app.use(express.urlencoded({extended : true}))
