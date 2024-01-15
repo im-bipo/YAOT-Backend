@@ -1,5 +1,5 @@
+const errorHandler = require("../middlewares/error");
 const Event = require("../models/event");
-
 //get all events
 const handleGetAllEvent = async (req, res) => {
   const result = await Event.find({});
@@ -8,7 +8,7 @@ const handleGetAllEvent = async (req, res) => {
 };
 
 //create new event
-const createNewEvent = async (req, res) => {
+const createNewEvent = async (req, res,next) => {
   const data = req.body;
   if (!data.name || !data.name || !data.time || !data.mentor)
     return res.status(400).json({
@@ -19,16 +19,18 @@ const createNewEvent = async (req, res) => {
   try {
     const result = await Event.create(req.body);
     return res.json({ msg: "create new event", sucess: true, res: result });
+
   } catch (err) {
+    next(err)
     //block user form entering multiple event with same event name
-    if (err.code === 11000) {
-      return res.status(400).json({
-        msg: "duplicate value in unique field",
-        sucess: false,
-        error: err,
-      });
-    }
-    return res.status(500).json({ msg: "server error", err: err });
+    // if (err.code === 11000) {
+    //   return res.status(400).json({
+    //     msg: "duplicate value in unique field",
+    //     sucess: false,
+    //     error: err,
+    //   });
+    // }
+    // return res.status(500).json({ msg: "server error", err: err });
   }
 };
 
@@ -74,6 +76,7 @@ const updateEventByEventName = async (req, res) => {
     }
     return res.json({ msg: "Event updated", sucess: true, res: result });
   } catch (err) {
+    next(err)
     //block user form entering multiple event with same event name
     if (err.code === 11000) {
       return res.status(400).json({
@@ -87,7 +90,7 @@ const updateEventByEventName = async (req, res) => {
 };
 
 //delete event
-const deleteEventByEventName = async (req, res) => {
+const deleteEventByEventName = async (req, res,next) => {
   try {
     const result = await Event.findOneAndDelete({ name: req.params.eventName });
     if (!result) {
@@ -95,7 +98,7 @@ const deleteEventByEventName = async (req, res) => {
     }
     return res.json({ msg: "Event Deleted", sucess: true, res: result });
   } catch (err) {
-    return res.status(500).json({ msg: "server error", err: err });
+    next(err)
   }
 };
 
