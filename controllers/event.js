@@ -46,7 +46,7 @@ const getEventByEventName = async (req, res) => {
     msg: "Event found",
     sucess: true,
     res: eventName,
-    reslut: result,
+    reslut: result[0],
   });
 };
 
