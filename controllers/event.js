@@ -8,20 +8,27 @@ const handleGetAllEvent = async (req, res) => {
 };
 
 //create new event
-const createNewEvent = async (req, res,next) => {
+const createNewEvent = async (req, res, next) => {
+  console.log("res recive", req.body);
   const data = req.body;
   if (!data.name || !data.name || !data.time || !data.mentor)
+  {
+    console.log('data is not good');
     return res.status(400).json({
       msg: "Insufficent data",
       "field required": "name, date, time and mentro",
       sucess: false,
     });
+  }
+    else{
+      console.log('data is ok');
+      
+    }
   try {
     const result = await Event.create(req.body);
     return res.json({ msg: "create new event", sucess: true, res: result });
-
   } catch (err) {
-    next(err)
+    next(err);
     //block user form entering multiple event with same event name
     // if (err.code === 11000) {
     //   return res.status(400).json({
@@ -76,7 +83,7 @@ const updateEventByEventName = async (req, res) => {
     }
     return res.json({ msg: "Event updated", sucess: true, res: result });
   } catch (err) {
-    next(err)
+    next(err);
     //block user form entering multiple event with same event name
     if (err.code === 11000) {
       return res.status(400).json({
@@ -90,7 +97,7 @@ const updateEventByEventName = async (req, res) => {
 };
 
 //delete event
-const deleteEventByEventName = async (req, res,next) => {
+const deleteEventByEventName = async (req, res, next) => {
   try {
     const result = await Event.findOneAndDelete({ name: req.params.eventName });
     if (!result) {
@@ -98,11 +105,9 @@ const deleteEventByEventName = async (req, res,next) => {
     }
     return res.json({ msg: "Event Deleted", sucess: true, res: result });
   } catch (err) {
-    next(err)
+    next(err);
   }
 };
-
-
 
 module.exports = {
   handleGetAllEvent,
