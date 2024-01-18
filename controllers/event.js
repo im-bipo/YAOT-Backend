@@ -1,6 +1,7 @@
-const multer = require("multer");
-const errorHandler = require("../middlewares/error");
+const fs = require("fs");
+const errorHandler = require("../middlewares/errorHandler");
 const Event = require("../models/event");
+
 //get all events
 const handleGetAllEvent = async (req, res) => {
   const result = await Event.find({});
@@ -10,12 +11,15 @@ const handleGetAllEvent = async (req, res) => {
 
 //create new event
 const createNewEvent = async (req, res, next) => {
+  req.body = { ...req.body, reqType: "createNewEvent", image: req.file.path };
+
   const data = req.body;
   if (!data.name || !data.name || !data.time || !data.mentor) {
     return res.status(400).json({
       msg: "Insufficent data",
       "field required": "name, date, time and mentro",
       sucess: false,
+      deleteImage,
     });
   }
   if (!req?.file?.path)
@@ -24,12 +28,14 @@ const createNewEvent = async (req, res, next) => {
       sucess: false,
     });
 
-  const eventData = { ...req.body, image: req.file.path };
-
   try {
-    const result = await Event.create(eventData);
+    const result = await Event.create(data);
+
     return res.json({ msg: "create new event", sucess: true, res: result });
   } catch (err) {
+    fs.unlink(req.body?.image, (data, err) => {
+      if (err) console.log(err);
+    });
     next(err);
   }
 };
