@@ -1,3 +1,4 @@
+const multer = require("multer");
 const errorHandler = require("../middlewares/error");
 const Event = require("../models/event");
 //get all events
@@ -9,35 +10,27 @@ const handleGetAllEvent = async (req, res) => {
 
 //create new event
 const createNewEvent = async (req, res, next) => {
-  console.log("res recive", req.body);
   const data = req.body;
-  if (!data.name || !data.name || !data.time || !data.mentor)
-  {
-    console.log('data is not good');
+  if (!data.name || !data.name || !data.time || !data.mentor) {
     return res.status(400).json({
       msg: "Insufficent data",
       "field required": "name, date, time and mentro",
       sucess: false,
     });
   }
-    else{
-      console.log('data is ok');
-      
-    }
+  if (!req?.file?.path)
+    return res.status(400).json({
+      msg: "Invalid File",
+      sucess: false,
+    });
+
+  const eventData = { ...req.body, image: req.file.path };
+
   try {
-    const result = await Event.create(req.body);
+    const result = await Event.create(eventData);
     return res.json({ msg: "create new event", sucess: true, res: result });
   } catch (err) {
     next(err);
-    //block user form entering multiple event with same event name
-    // if (err.code === 11000) {
-    //   return res.status(400).json({
-    //     msg: "duplicate value in unique field",
-    //     sucess: false,
-    //     error: err,
-    //   });
-    // }
-    // return res.status(500).json({ msg: "server error", err: err });
   }
 };
 

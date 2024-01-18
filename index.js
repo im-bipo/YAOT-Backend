@@ -1,6 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
-const multer = require('multer')
+const path = require('path')
 
 const connectToMongoDB = require("./connection");
 
@@ -12,17 +12,17 @@ dotenv.config();
 
 const { PORT, DB_URL } = process.env;
 
-//databaseConnection
+//databaseConnection 
 connectToMongoDB(DB_URL);
 
 //middlewares
-const upload = multer();
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 
 //routes
-app.use("/api/event",upload.none(),eventRouter); 
+app.use("/api/event",eventRouter); 
 
 app.use((err, req, res, next) => {
   console.log("hi im error handler", err);
