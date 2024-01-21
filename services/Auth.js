@@ -16,8 +16,6 @@ const getUser = (token, next) => {
   } catch (err) {
     next({ status: 400, msg: "cant validate user" });
   }
-  console.log(user);
-  return user;
 };
 
 module.exports = { setUser, getUser };

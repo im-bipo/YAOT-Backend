@@ -9,6 +9,7 @@ const connectToMongoDB = require("./connection");
 const eventRouter = require("./routes/event");
 const userRouter = require("./routes/user");
 const errorHandler = require("./middlewares/errorHandler");
+const {CheckForAuthentication} = require("./middlewares/auth");
 
 const app = express();
 dotenv.config();
@@ -23,6 +24,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads"))); //serve st
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(cookieParser())
+app.use(CheckForAuthentication)
 
 
 //routes

@@ -1,38 +1,38 @@
 const { getUser } = require("../services/Auth");
 
-
-// const USER = require("../models/user");
-// const mongoose = require("mongoose");
-
-const allowOnlyAdmins = async (req, res, next) => {
+const CheckForAuthentication = async (req, res, next) => {
   //check cookies
-  if (!req.cookies?.uid) return next({ status: 400, msg: "login first" });
-
-  //check user role
-  if (req.body.userRole !== "admin")
-    return next({ status: 401, msg: "page not found" });
+  if (!req.cookies?.uid) {
+    req.body.user = null;
+    return next();
+  }
+  if (!req.body?.userRole) {
+    req.body.userRole = null;
+    return next();
+  }
 
   //verify jwt
-  const userDetailsJwt = getUser(req.cookies.uid,next);
+  const userDetailsJwt = getUser(req.cookies.uid, next);
 
-  //verify role in database
-  //   const userDetailsFormDb = await USER.findOne({
-  //     email: userDetailsFormJwt.email,
-  //   })
-  //     .then((res) => {
-  //       return res;
-  //     })
-  //     .catch((err) => next(err));
-  //   console.log(userDetailsFormDb);
-
-  if (req.body.userRole !== userDetailsJwt.role) {
+  if (req.body.userRole !== userDetailsJwt?.role) {
     return next({
       status: 401,
       msg: "error in local storage, user role is not valid",
     });
   }
-  console.log(userDetailsJwt);
+
+  req.body.user = userDetailsJwt;
   next();
 };
 
-module.exports = allowOnlyAdmins;
+
+const restrictTo = (roles = ['']) => {
+  return async (req,res,next) => {
+    if(!roles.includes(req.body.userRole))
+    next({mgs :'unauthorize'})
+    
+    next()
+  }
+}
+
+module.exports = {CheckForAuthentication,restrictTo};
