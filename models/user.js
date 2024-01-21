@@ -19,6 +19,9 @@ const userSchema = new mongoose.Schema({
         enum : ['user','General Member','Excutive Member','Senior Excutive','Admin'],
         default :"user"
     },
+    eventRegisterd : {
+        type : []
+    },
     profilePicture : {
         type : String,
         default : 'uploads/images/profilePicture/defaultProfilePicture.jpg'

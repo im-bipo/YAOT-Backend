@@ -1,6 +1,7 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const path = require("path");
+const cookieParser = require('cookie-parser')
 
 const connectToMongoDB = require("./connection");
 
@@ -19,9 +20,10 @@ connectToMongoDB(DB_URL);
 
 //middlewares
 app.use("/uploads", express.static(path.join(__dirname, "uploads"))); //serve static files
-
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cookieParser())
+
 
 //routes
 app.use("/api/event", eventRouter);

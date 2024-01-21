@@ -8,6 +8,7 @@ const {
   updateEventByEventName,
   deleteEventByEventName,
 } = require("../controllers/event");
+const allowOnlyAdmins = require("../middlewares/auth");
 
 const app = express();
 const router = express.Router();
@@ -15,7 +16,7 @@ const router = express.Router();
 //all event
 router
   .route("/")
-  .get(handleGetAllEvent)
+  .get(allowOnlyAdmins , handleGetAllEvent)
   .post(uploadEventThumbnail.single("thumbnailImage"), createNewEvent);
 
 //individual event
