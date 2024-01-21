@@ -1,67 +1,55 @@
 const mongoose = require("mongoose");
 
-// const eventSchema = new mongoose.Schema(
-//   {
-//     name: {
-//       type: String,
-//       required: true,
-//     },
-//     date: {
-//       start: {
-//         type: String,
-//         required: true,
-//       },
-//       end: {
-//         type: String,
-//       },
-//     },
-//     time: {
-//       start: {
-//         type: String,
-//         required: true,
-//       },
-//       duration: {
-//         type: String,
-//       },
-//     },
-//     mentor: {
-//       type: [
-//         {
-//           name: { type: String, required: true },
-//           field: { type: String, required: true },
-//           socialLink: { type: String },
-//         },
-//       ],
-//     },
-//   },
-//   { timestamps: true }
-// );
 const eventSchema = new mongoose.Schema(
   {
     name: {
       type: String,
       required: true,
-      unique: true,
     },
     date: {
-      type: String,
-      required: true,
+      start: {
+        type: String,
+        default: "02 Jan",
+        required: true,
+      },
+      end: {
+        type: String,
+        default: "03 Jan",
+      },
     },
     time: {
-      type: String,
-      required: true,
+      start: {
+        type: String,
+        required: true,
+        default: "5:00 Pm",
+      },
+      duration: {
+        type: String,
+        default: "1 hr",
+      },
     },
     mentor: {
-      type: String,
-      required: true,
+      name: { type: String, required: true, default: "Nabin Thapa" },
+      field: { type: String, required: true, default: "IT - Lead" },
+      socialLink: {
+        type: String,
+        default: "https://linkdein.in/nabin_thapa",
+      },
+      tags : {
+        type : [
+          
+        ]
+      }
     },
     decs: {
       type: String,
       required: true,
+      default: "this is the decs",
     },
     image: {
       type: String,
       required: true,
+      default: `uploads//images//eventThumbnails//defaultImageForThumbnail Card.png`,
     },
   },
   { timestamps: true }

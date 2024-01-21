@@ -1,7 +1,6 @@
 const express = require("express");
 const uploadEventThumbnail = require("../middlewares/eventThubnail");
 
-
 const {
   handleGetAllEvent,
   createNewEvent,
@@ -14,7 +13,10 @@ const app = express();
 const router = express.Router();
 
 //all event
-router.route("/").get(handleGetAllEvent).post(uploadEventThumbnail.single('thumbnailImage'),createNewEvent);
+router
+  .route("/")
+  .get(handleGetAllEvent)
+  .post(uploadEventThumbnail.single("thumbnailImage"), createNewEvent);
 
 //individual event
 router
@@ -22,6 +24,7 @@ router
   .get(getEventByEventName)
   .patch(updateEventByEventName)
   .delete(deleteEventByEventName);
+
 
 
 module.exports = router;
