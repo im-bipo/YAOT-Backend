@@ -4,15 +4,14 @@ const errorHandler = (err, req, res, next) => {
       case "createNewEvent":
         return res
           .status(400)
-          .json({ errorCause: "Event with same name already exist" });
-        break;
+          .json({ msg: "Event with same name already exist" });
 
       default:
-        return res.status(400).json({ errorCause: "Same data already exist" });
+        return res.status(400).json({ msg: "Same data already exist" });
         break;
     }
   }
-  return res.status(err.status ?err.status :500).json({ error: err , errorFrom : 'umknown '});
+  return res.status(err.status ?err.status :500).json(err)
 };
 
 module.exports = errorHandler;

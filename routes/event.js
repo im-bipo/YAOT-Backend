@@ -16,15 +16,15 @@ const router = express.Router();
 //all event
 router
   .route("/")
-  .get(restrictTo(['Admin']) ,handleGetAllEvent)
-  .post(uploadEventThumbnail.single("thumbnailImage"), createNewEvent);
+  .get(restrictTo(['Admin','user']) ,handleGetAllEvent)
+  .post(uploadEventThumbnail.single("thumbnailImage"),restrictTo(['Admin']), createNewEvent);
 
 //individual event
 router
   .route("/:eventName")
-  .get(getEventByEventName)
-  .patch(updateEventByEventName)
-  .delete(deleteEventByEventName);
+  .get(restrictTo(['Admin','user']),getEventByEventName)
+  .patch(restrictTo(['Admin']),updateEventByEventName)
+  .delete(restrictTo(['Admin']),deleteEventByEventName);
 
 
 

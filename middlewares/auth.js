@@ -7,9 +7,11 @@ const CheckForAuthentication = async (req, res, next) => {
     return next();
   }
   if (!req.body?.userRole) {
+    console.log('no user role',req.body);
     req.body.userRole = null;
     return next();
   }
+  console.log('user role',req.body);
 
   //verify jwt
   const userDetailsJwt = getUser(req.cookies.uid, next);
@@ -29,7 +31,7 @@ const CheckForAuthentication = async (req, res, next) => {
 const restrictTo = (roles = ['']) => {
   return async (req,res,next) => {
     if(!roles.includes(req.body.userRole))
-    next({mgs :'unauthorize'})
+    next({mgs :'unauthorize',req : req.body})
     
     next()
   }

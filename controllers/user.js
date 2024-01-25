@@ -5,13 +5,14 @@ const USER = require("../models/user");
 const { setUser } = require("../services/Auth");
 
 const createNewUser = async (req, res, next) => {
+  console.log("new acc req");
+
   data = req.body;
   if (!data.name || !data.email || !data.password) {
     return next({
       status: 400,
       reqType: "createNewUser",
-      resMsg:
-        "Incomplete form => name, email, password are not filled properly",
+      msg: "Incomplete form => name, email, password are not filled properly",
     });
   }
 
@@ -25,9 +26,23 @@ const createNewUser = async (req, res, next) => {
       role: result.role,
       pUrl: result.profilePicture,
     });
-    return res.status(201).cookie("uid", token).json({ userId: result._id });
+    console.log("hi try error block",result);
+    // return res.json({msg :'hi'})
+    return res
+      .status(201)
+      .cookie("uid", token)
+      .json({
+        user: {
+          userId: result._id,
+          userName: result.name,
+          userRole: result.role,
+        },
+        msg: "login sucessfull",
+      });
   } catch (err) {
-    next(err);
+    console.log("hi im error block");
+
+   return next(err);
   }
 };
 const checkForExistingUser = async (req, res, next) => {
@@ -36,10 +51,9 @@ const checkForExistingUser = async (req, res, next) => {
     next({
       status: 400,
       reqType: "SignUp User",
-      resMsg: "Incomplete form => email, password are not filled properly",
+      msg: "Incomplete form => email, password are not filled properly",
     });
   }
-
   const email = data.email;
   const password = data.password;
 
@@ -54,7 +68,14 @@ const checkForExistingUser = async (req, res, next) => {
         role: userDetails.role,
         pUrl: userDetails.profilePicture,
       });
-      return res.cookie("uid", token).json({ msg: "signUp sucessfull" });
+      return res.cookie("uid", token).json({
+        user: {
+          userId: userDetails._id,
+          userName: userDetails.name,
+          userRole: userDetails.role,
+        },
+        msg: "signUp sucessfull",
+      });
     }
     next({ status: 400, msg: "incorrect password" });
   });

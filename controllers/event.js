@@ -38,7 +38,7 @@ const createNewEvent = async (req, res, next) => {
 
   try {
     const result = await Event.create(data);
-    return res.json({ msg: "create new event", sucess: true, res: result });
+    return res.status(201).json({ msg: "create new event", data: result });
   } catch (err) {
     
     fs.unlink(req.body?.image, (data, err) => {
