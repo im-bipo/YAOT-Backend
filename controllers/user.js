@@ -5,7 +5,6 @@ const USER = require("../models/user");
 const { setUser } = require("../services/Auth");
 
 const createNewUser = async (req, res, next) => {
-  console.log("new acc req");
 
   data = req.body;
   if (!data.name || !data.email || !data.password) {
@@ -26,7 +25,6 @@ const createNewUser = async (req, res, next) => {
       role: result.role,
       pUrl: result.profilePicture,
     });
-    console.log("hi try error block",result);
     // return res.json({msg :'hi'})
     return res
       .status(201)
@@ -40,7 +38,6 @@ const createNewUser = async (req, res, next) => {
         msg: "login sucessfull",
       });
   } catch (err) {
-    console.log("hi im error block");
 
    return next(err);
   }
