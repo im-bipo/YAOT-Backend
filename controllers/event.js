@@ -6,9 +6,7 @@ const Event = require("../models/event");
 
 //get all events
 const handleGetAllEvent = async (req, res) => {
-  console.log(req.body);
   const result = await Event.find({});
-  console.log(result);
 
   return res.json([{
     _id : 12344,
