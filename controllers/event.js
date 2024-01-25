@@ -8,8 +8,14 @@ const Event = require("../models/event");
 const handleGetAllEvent = async (req, res) => {
   console.log(req.body);
   const result = await Event.find({});
+  console.log(result);
 
-  res.json(result);
+  return res.json([{
+    _id : 12344,
+    name : 'event', 
+    image : 'uploads/images/eventThumbnails/defaultProfilePicture.jpg'
+  }]);
+  return res.json(result);
 };
 
 //create new event
@@ -23,7 +29,7 @@ const createNewEvent = async (req, res, next) => {
   req.body = {
     ...req.body,
     reqType: "createNewEvent",
-    image: req.file.path
+    image: req.file.path,
   };
 
   const data = req.body;
@@ -40,14 +46,12 @@ const createNewEvent = async (req, res, next) => {
     const result = await Event.create(data);
     return res.status(201).json({ msg: "create new event", data: result });
   } catch (err) {
-    
     fs.unlink(req.body?.image, (data, err) => {
       if (err) console.log(err);
     });
     next(err);
   }
 };
-
 
 //=> /event/:eventId
 
