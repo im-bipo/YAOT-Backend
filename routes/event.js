@@ -16,7 +16,7 @@ const router = express.Router();
 //all event
 router
   .route("/")
-  .get(restrictTo(['Admin','user']) ,handleGetAllEvent)
+  .get(handleGetAllEvent)
   .post(uploadEventThumbnail.single("thumbnailImage"),restrictTo(['Admin']), createNewEvent);
 
 //individual event
