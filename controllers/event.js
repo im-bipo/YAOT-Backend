@@ -8,22 +8,18 @@ const Event = require("../models/event");
 const handleGetAllEvent = async (req, res) => {
   const result = await Event.find({});
 
-  return res.json([{
-    _id : 12344,
-    name : 'event', 
-    image : 'uploads/images/eventThumbnails/defaultProfilePicture.jpg'
-  }]);
+  return res.json([
+    {
+      _id: 12344,
+      name: "event",
+      image: "uploads/images/eventThumbnails/defaultProfilePicture.jpg",
+    },
+  ]);
   return res.json(result);
 };
 
 //create new event
 const createNewEvent = async (req, res, next) => {
-  // check if there is file or not
-  if (!req?.file?.path)
-    return res.status(400).json({
-      msg: "Invalid File",
-      sucess: false,
-    });
   req.body = {
     ...req.body,
     reqType: "createNewEvent",
@@ -31,21 +27,38 @@ const createNewEvent = async (req, res, next) => {
   };
 
   const data = req.body;
+
   if (!data.name) {
     return res.status(400).json({
       msg: "Insufficent data",
-      "field required": "name, date, time and mentro",
+      "field required": "Name",
       sucess: false,
       // deleteImage,
     });
   }
 
   try {
-    const result = await Event.create(data);
-    return res.status(201).json({ msg: "create new event", data: result });
+    const result = await Event.create({
+      name: data.name,
+      date: {
+        start: data.dateStart,
+        end: data.dateEnd,
+      },
+      time: {
+        start: data.timeStart,
+        end: data.timeEnd,
+      },
+      mentor: {
+        name: data.mentorName,
+        field: data.mentorField,
+        socialLink: data.mentorSocialLink,
+      },
+      decs: data.description,
+    });
+    return res.status(201).json({ msg: "new event created Sucessfully" });
   } catch (err) {
     fs.unlink(req.body?.image, (data, err) => {
-      if (err) console.log(err);
+      next(err);
     });
     next(err);
   }

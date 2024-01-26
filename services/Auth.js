@@ -10,6 +10,7 @@ const setUser = (user) => {
 };
 
 const getUser = (token, next) => {
+  
   try {
     const user = jwt.verify(token, SECURITY_KEY);
     return user;

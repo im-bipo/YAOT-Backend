@@ -3,7 +3,7 @@ const { getUser } = require("../services/Auth");
 const CheckForAuthentication = async (req, res, next) => {
   //check cookies
   if (!req.cookies?.uid) {
-    req.body.user = {role :'Guest'};
+    req.locals = { user: { role: "Guest" } };
     return next();
   }
   // if (!req.body?.userRole) {
@@ -21,18 +21,18 @@ const CheckForAuthentication = async (req, res, next) => {
   //   });
   // }
 
-  req.body.user = userDetailsJwt;
+  req.locals = { user: userDetailsJwt };
   next();
 };
 
+const restrictTo = (roles = [""]) => {
+  return async (req, res, next) => {
+    if (!roles.includes(req?.locals?.user.role)) {
+      next({ status: 401, mgs: "unauthorize", req: req.body });
+    }
 
-const restrictTo = (roles = ['']) => {
-  return async (req,res,next) => {
-    if(!roles.includes(req?.body?.user.role))
-    next({status : 401, mgs :'unauthorize',req : req.body})
-    
-    next()
-  }
-}
+    next();
+  };
+};
 
-module.exports = {CheckForAuthentication,restrictTo};
+module.exports = { CheckForAuthentication, restrictTo };
