@@ -35,11 +35,6 @@ const eventSchema = new mongoose.Schema(
         type: String,
         default: "https://linkdein.in/nabin_thapa",
       },
-      tags : {
-        type : [
-          
-        ]
-      }
     },
     decs: {
       type: String,
