@@ -28,7 +28,7 @@ const createNewEvent = async (req, res, next) => {
 
   const data = req.body;
 
-  if (!data.name) {
+  if (!data.name) { 
     return res.status(400).json({
       msg: "Insufficent data",
       "field required": "Name",
